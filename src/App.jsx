@@ -2,11 +2,13 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 
-import { Dashboard } from './components/Dashboard.jsx';
+import { Dashboard } from './components/Dashboard';
 
 import { Admin } from './pages/Admin';
 import { Home } from './pages/Home';
-import { Sub } from './pages/Sub';  
+import { Sub } from './pages/Sub';
+
+import { Form } from './components/Form'; // testing
 
 // npm run dev to start React from console.
 // user: { username, email, password, role}
@@ -85,6 +87,7 @@ function App() {
   return (
     <>
       <Dashboard user={user} setUser={setUser} />
+      {/* <Form formObject={user} setSomeState={setUser}/> */}
       <BrowserRouter>
         <nav>
           <div>
