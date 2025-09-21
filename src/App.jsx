@@ -1,14 +1,21 @@
 import { useEffect, useState } from 'react';
 import './App.css';
-import { Dashboard} from './components/Dashboard.jsx';
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 
+import { Dashboard } from './components/Dashboard.jsx';
 
+import { Admin } from './pages/Admin';
+import { Home } from './pages/Home';
+import { Sub } from './pages/Sub';  
+
+// npm run dev to start React from console.
 // user: { username, email, password, role}
 // ool: { commonName: {en: string}, description: {en: string}, ool: string}
 // userlink: {user: userId, ool: oolId, nickname: string}
 
 function App() {
 
+  const URL = ""; // fix later
 
   const [user, setUser] = useState({
     username: "",
@@ -18,12 +25,84 @@ function App() {
   });
   // note - logout
 
-  // runs on load, retrieves JWT from localstorage.
-  useEffect(() => { }, [])
+  const [jwt, setJwt] = useState("");
+
+  // put in something to clear localStorage later.
+  // runs on load, retrieves JWT and user from localstorage.
+  useEffect(() => {
+    const retrieveJWT = localStorage.getItem('jwt');
+    const retrieveUser = localStorage.getItem('user');
+
+    // if token or user does not exist, set jwt and user to empty strings.  Shouldn't hurt.
+    if (!retrieveJWT || !retrieveUser) {
+      setUser({
+        username: "",
+        email: "",
+        password: "",
+        role: ""
+      });
+      setJwt("");
+    }
+
+    // if jwt is expired, we should get an error from backend.  We set user and jwt to empty strings and prompt them to log in again.
+
+    try {
+      // fetch with the JWT.  If it works, set user and jwt.
+      const logmein = async () => {
+        try {
+          const response = await fetch(`${URL}/login`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${retrieveJWT}`
+            },
+            body: JSON.stringify(retrieveUser)
+          });
+
+          if (!response.ok) {
+            throw new Error(`App.jsx error when attempting to login (POST)`)
+          }
+          // if there was an error, the throw prevents the following from being executed.  So if below runs, no errors.
+          // const result = await response.json(); // we're not actually doing anything with the login return.  Logging in itself is the goal; we then set JWT and user in state.
+          // Technically, the return should list the user, and we use that user - after all, the JWT in localStorage might not reflect the current user.
+          setJwt(retrieveJWT);
+          setUser(retrieveUser);
+
+        } catch (error) {
+          console.error('App.jsx error when attempting to login (POST) - msg 2.  This may occur when attempting to incorrectly connect to the backend.')
+        }
+      }
+      logmein();
+      // fetch with the JWT.  If it works, set user and jwt.
+    } catch (error) {
+      // probably there was a JWT error.  Set user and jwt to empty strings; user is prompted to log in.
+      console.error('Error in App.jsx useEffect; possible JWT expired.  Please log in again.')
+      // possibly it's something like the user data doesn't conform to the backend data structure.  Note that for later.
+    }
+    // return cleanup function if applicable.
+  }, [])
 
   return (
     <>
       <Dashboard user={user} setUser={setUser} />
+      <BrowserRouter>
+        <nav>
+          <div>
+            <Link to="/">Home</Link>
+          </div>
+          <div>
+            {user.role === "sub" ? <Link to="/subs">Subs</Link> : null}
+          </div>
+          <div>
+            {user.role === "admin" ? <Link to="/admin">Admin</Link> : null}
+          </div>
+        </nav>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/sub" element={<Admin />} />
+          <Route path="/admin" element={<Sub />} />
+        </Routes>
+      </BrowserRouter>
     </>
   )
 }
