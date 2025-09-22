@@ -4,7 +4,7 @@ import { URL } from '../constants/constants';
 // const Form = ({ formObject = {}, setSomeState, callAPI }) 
 
 const Home = ({ user, setJwt, setUser }) => {
-  if (user.role !== "") {
+  if (user && user.role !== "") {
     return <div>It seems a user is already logged in.  Please navigate to /sub or /admin depending on your role.</div>
   }
   // If user.role === "", register and login show.
