@@ -10,14 +10,19 @@ import { Sub } from './pages/Sub';
 
 import { Form } from './components/Form'; // testing
 
+import { URL } from './constants/constants';
+
+// note:  Back end on Render consistently gets 'Internal server error' for stuff with POST etc.  Probably this is due to needing to have stuff passed in with POST (register/login) and/or headers set.  Fix this; want a general purpose back end that can be accessed through browser that will display object-like data.
+
+// Postman check on https://two025-09-12-capstone-back-2.onrender.com/register seems to work all right.  Probably have to double check how JWT is passed back and forth and such.
+
 // npm run dev to start React from console.
 // user: { username, email, password, role}
 // ool: { commonName: {en: string}, description: {en: string}, ool: string}
 // userlink: {user: userId, ool: oolId, nickname: string}
+// https://medium.com/@lfoster49203/javascript-cors-cross-origin-resource-sharing-troubleshooting-6c2767530efe
 
 function App() {
-
-  const URL = ""; // fix later
 
   const [user, setUser] = useState({
     username: "",
@@ -27,7 +32,7 @@ function App() {
   });
   // note - logout
 
-  const [jwt, setJwt] = useState("");
+  const [jwt, setJwt] = useState(""); // standardize; sometimes I'm referencing setJwt, sometimes setJWT.
 
   // put in something to clear localStorage later.
   // runs on load, retrieves JWT and user from localstorage.
@@ -51,8 +56,9 @@ function App() {
     try {
       // fetch with the JWT.  If it works, set user and jwt.
       const logmein = async () => {
+        console.log('App.jsx logmein', retrieveUser);
         try {
-          const response = await fetch(`${URL}/login`, {
+          const response = await fetch(`${import.meta.env.VITE_SERVER_ORIGIN}/login`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -68,7 +74,7 @@ function App() {
           // const result = await response.json(); // we're not actually doing anything with the login return.  Logging in itself is the goal; we then set JWT and user in state.
           // Technically, the return should list the user, and we use that user - after all, the JWT in localStorage might not reflect the current user.
           setJwt(retrieveJWT);
-          setUser(retrieveUser);
+          setUser(JSON.parse(retrieveUser)); // we got value from localStorage so it was a string that needs to be JSON.parsed into an object if we're going to pop an object in state.
 
         } catch (error) {
           console.error('App.jsx error when attempting to login (POST) - msg 2.  This may occur when attempting to incorrectly connect to the backend.')
@@ -91,7 +97,7 @@ function App() {
       <BrowserRouter>
         <nav>
           <div>
-            <Link to="/">Home</Link>
+            {user.role === "" ? <Link to="/">Register and Login</Link> : null}
           </div>
           <div>
             {user.role === "sub" ? <Link to="/subs">Subs</Link> : null}
@@ -99,11 +105,14 @@ function App() {
           <div>
             {user.role === "admin" ? <Link to="/admin">Admin</Link> : null}
           </div>
+          <div>
+            {user.role !== "" && user.role !== "sub" && user.role !== "admin" ? <div>User role must be empty string, sub, or admin.  Please update user profile.</div> : null}
+          </div>
         </nav>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/sub" element={<Admin />} />
-          <Route path="/admin" element={<Sub />} />
+          <Route path="/" element={<Home user={user} setJwt={setJwt} setUser={setUser}/>} />
+          <Route path="/sub" element={<Sub user={user} jwt={jwt}/>} />
+          <Route path="/admin" element={<Admin user={user} jwt={jwt}/>} />
         </Routes>
       </BrowserRouter>
     </>
