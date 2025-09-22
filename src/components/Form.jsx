@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const Form = ({ formObject = {}, setSomeState, callAPI, title }) => { // change 'setSomeState' and 'callAPI' variable names.
+const Form = ({ formObject = {}, setSomeState, callAPI, title, user }) => { // change 'setSomeState' and 'callAPI' variable names.
   const [formData, setFormData] = useState({});
   const navigate = useNavigate();
 
@@ -25,18 +25,22 @@ const Form = ({ formObject = {}, setSomeState, callAPI, title }) => { // change 
   }
 
   // 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => { // made the whole handleSubmit async.  Is that standard practice?
     event.preventDefault();
     try {
-      const asyncCall = async () => {
-        const response = await callAPI(formData); // whether create, update, delete, we assume for simplicity it processes correctly.  Test error handling later.  Normally would do const data = response.json(); or similar, but here we're not using that data.  Correctly, would use data to give user some sort of feedback, and use loading animation while processing.
-        // note 'submit' is user-initiated.  Shouldn't run into infinite loop.
-        setSomeState(formData);
-      }
-      asyncCall();
-      if (formData.role && formData.role === 'admin') {
+
+      const response = await callAPI(formData); // whether create, update, delete, we assume for simplicity it processes correctly.  Test error handling later.  Normally would do const data = response.json(); or similar, but here we're not using that data.  Correctly, would use data to give user some sort of feedback, and use loading animation while processing.
+      // note 'submit' is user-initiated.  Shouldn't run into infinite loop.
+
+      // setSomeState(formData);  // Moved this inside callAPI.
+
+      // technically I think I got 
+      // const data = await response.json(); // is this really necessary?  callAPI isn't a fetch.
+      // it's a bit odd, but I think await callAPI might not have set state before state is checked here.  hm.
+
+      if (response && response.role === 'admin') {
         navigate('/admin');
-      } else if (formData.role && formData.role === 'sub') {
+      } else if (response && response.role === 'sub') {
         navigate('/sub');
       }
     }

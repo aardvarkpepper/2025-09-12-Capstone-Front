@@ -35,16 +35,18 @@ const Home = ({ user, setJwt, setUser }) => {
         throw new Error('/login failed')
       }
       const data = await response2.json();
-      localStorage.setItem('jwt', JSON.stringify(data.token)); // rework back end so it's uniformly structured in data structures.  Look up common data structures.
+      localStorage.setItem('jwt', data.token); // rework back end so it's uniformly structured in data structures.  Look up common data structures.  Note that data.token is a string, so should not require JSON.stringify.
       setJwt(data.token);
+      return data.user; // 
     } catch (error) {
       console.error('Home.jsx, error in /register or login attempt.')
+      throw new Error('Home.jsx to Form error'); // caught in Form.jsx.
     }
   };
   return (
     <>
       {user.role !== "" ? <div>If a user is logged in, they may not be logged in with 'sub' or 'admin' role.  Please register a new user with 'sub' or 'admin' role and log in.</div> : null}
-      {user.role === "" ? <Form formObject={user} setSomeState={setUser} callAPI={registerAndLoginUser} title={'Register and Login'} /> : null}
+      {user.role === "" ? <Form formObject={user} setSomeState={setUser} callAPI={registerAndLoginUser} title={'Register and Login'} user={user}/> : null}
     </>
   )
 }
