@@ -31,13 +31,16 @@ const Admin = ({ user, jwt }) => {
     try {
       const response = await fetch(import.meta.env.VITE_SERVER_ORIGIN + routeString, {
         method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${jwt}`
+        },
         // body: JSON.stringify(user) // just don't need it.
       });
       const data = await response.json();
       setOutputData(data);
 
-      setOutputDataLabel("/admin/users");
+      setOutputDataLabel(routeString);
     } catch (error) {
       console.error('Home.jsx, error in /register or login attempt.')
     }

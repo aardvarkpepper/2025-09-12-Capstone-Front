@@ -1,4 +1,16 @@
-const Dashboard = ({ user, setUser }) => {
+const Dashboard = ({ user, setUser, setJwt }) => {
+
+  const handleLogOut = () => {
+    setUser({
+      username: "",
+      email: "",
+      password: "",
+      role: ""
+    });
+    setJwt("");
+    localStorage.removeItem('jwt');
+    localStorage.removeItem('user');
+  }
   return (
     <div className='dashboard'>
       <div>
@@ -7,7 +19,7 @@ const Dashboard = ({ user, setUser }) => {
         {user.role === "admin" ? `Currently logged in as admin, username: ${user.username}.` : null}
       </div>
       <div>
-        {user.username ? <button>Log Out</button> : null}
+        {user.username ? <button onClick={handleLogOut}>Log Out</button> : null}
       </div>
     </div>
   )

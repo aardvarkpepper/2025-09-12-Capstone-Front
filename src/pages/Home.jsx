@@ -37,10 +37,11 @@ const Home = ({ user, setJwt, setUser }) => {
       const data = await response2.json();
       localStorage.setItem('jwt', data.token); // rework back end so it's uniformly structured in data structures.  Look up common data structures.  Note that data.token is a string, so should not require JSON.stringify.
       setJwt(data.token);
+
       return data.user; // 
     } catch (error) {
       console.error('Home.jsx, error in /register or login attempt.')
-      throw new Error('Home.jsx to Form error'); // caught in Form.jsx.
+      throw new Error('Home.jsx to Form error'); // caught in Form.jsx. Actually, I don't want to halt execution, as I could get an error if Fetch attempts to use nonexistent user - something like that.  Clean this up later.
     }
   };
   return (

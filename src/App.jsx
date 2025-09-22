@@ -77,7 +77,7 @@ function App() {
           setUser(JSON.parse(retrieveUser)); // we got value from localStorage so it was a string that needs to be JSON.parsed into an object if we're going to pop an object in state.
 
         } catch (error) {
-          console.error('App.jsx error when attempting to login (POST) - msg 2.  This may occur when attempting to incorrectly connect to the backend.')
+          console.error('App.jsx error when attempting to login (POST) - msg 2.  This may occur when attempting to incorrectly connect to the backend.  However, this is also expected behavior when jwt and user data does not exist in localStorage.')
         }
       }
       logmein();
@@ -92,7 +92,7 @@ function App() {
 
   return (
     <>
-      <Dashboard user={user} setUser={setUser} />
+      <Dashboard user={user} setUser={setUser}  setJwt={setJwt}/>
       {/* <Form formObject={user} setSomeState={setUser}/> */}
       <BrowserRouter>
         <nav>
