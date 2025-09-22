@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react';
  */
 
 const Sub = ({ user, jwt }) => {
-  if (user.role !== "sub") {
+  if (user && user.role !== "sub") {
     return <div>Current user does not have role 'sub'.  Please register if necessary, then log in with a profile that has 'sub' role, or update profile.</div>
   }
 

@@ -22,7 +22,7 @@ const Admin = ({ user, jwt }) => {
   const [outputData, setOutputData] = useState({}); // technically ought to be a stringified object, but I think React may render it all right.  Eh, type coercion.
   const [outputDataLabel, setOutputDataLabel] = useState("");
 
-  if (user.role !== "admin") {
+  if (user && user.role !== "admin") {
     return <div>Current user does not have role 'admin'.  Please register if necessary, then log in with a profile that has 'admin' role</div>
   }
 
