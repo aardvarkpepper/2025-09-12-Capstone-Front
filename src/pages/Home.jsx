@@ -46,8 +46,8 @@ const Home = ({ user, setJwt, setUser }) => {
   };
   return (
     <>
-      {user.role !== "" ? <div>If a user is logged in, they may not be logged in with 'sub' or 'admin' role.  Please register a new user with 'sub' or 'admin' role and log in.</div> : null}
-      {user.role === "" ? <Form formObject={user} setSomeState={setUser} callAPI={registerAndLoginUser} title={'Register and Login'} user={user}/> : null}
+      {user && user.role !== "" ? <div>If a user is logged in, they may not be logged in with 'sub' or 'admin' role.  Please register a new user with 'sub' or 'admin' role and log in.</div> : null}
+      {user && user.role === "" ? <Form formObject={user} setSomeState={setUser} callAPI={registerAndLoginUser} title={'Register and Login'} user={user}/> : null}
     </>
   )
 }
