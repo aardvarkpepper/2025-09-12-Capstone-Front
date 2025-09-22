@@ -10,7 +10,7 @@ import { Sub } from './pages/Sub';
 
 import { Form } from './components/Form'; // testing
 
-import { URL } from './constants/constants';
+// import { URL } from './constants/constants';
 
 // note:  Back end on Render consistently gets 'Internal server error' for stuff with POST etc.  Probably this is due to needing to have stuff passed in with POST (register/login) and/or headers set.  Fix this; want a general purpose back end that can be accessed through browser that will display object-like data.
 

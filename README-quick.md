@@ -356,5 +356,25 @@ https://web.dev/articles/indexeddb#:~:text=A%20wrapper%20around%20an%20operation
 
 https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API#:~:text=Note%3A%20Like%20most%20web%20storage,access%20data%20across%20different%20domains.
 
+Changed
+
+{
+  "files": [],
+  // "references": [
+  //   { "path": "./tsconfig.app.json" },
+  //   { "path": "./tsconfig.node.json" }
+  // ],
+  "compilerOptions": {
+    "allowJs": true,
+    "esModuleInterop": true,
+    "noImplicitAny": false
+  },
+  "include": ["src/**/*", "node_modules"]
+}
 
 
+popped out the //'s in tsconfig.json
+
+npm uninstall typescript @types/node @types/react @types/react-dom
+deleted tsconfig.json
+changed package.json  "build": "tsc -b && vite build", chopped tsc
