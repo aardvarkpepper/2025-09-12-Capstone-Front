@@ -378,3 +378,10 @@ popped out the //'s in tsconfig.json
 npm uninstall typescript @types/node @types/react @types/react-dom
 deleted tsconfig.json
 changed package.json  "build": "tsc -b && vite build", chopped tsc
+removed "typescript-eslint": "^8.39.1", from devDependencies
+
+Ran
+
+npm install -g serve
+then
+serve -s dist

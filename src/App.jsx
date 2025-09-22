@@ -97,16 +97,16 @@ function App() {
       <BrowserRouter>
         <nav>
           <div>
-            {user.role === "" ? <Link to="/">Register and Login</Link> : null}
+            {(user && user.role) === "" ? <Link to="/">Register and Login</Link> : null}
           </div>
           <div>
-            {user.role === "sub" ? <Link to="/subs">Subs</Link> : null}
+            {(user && user.role) === "sub" ? <Link to="/subs">Subs</Link> : null}
           </div>
           <div>
-            {user.role === "admin" ? <Link to="/admin">Admin</Link> : null}
+            {(user && user.role) === "admin" ? <Link to="/admin">Admin</Link> : null}
           </div>
           <div>
-            {user.role !== "" && user.role !== "sub" && user.role !== "admin" ? <div>User role must be empty string, sub, or admin.  Please update user profile.</div> : null}
+            {(user && user.role !== "" && user.role !== "sub" && user.role !== "admin")? <div>User role must be empty string, sub, or admin.  Please update user profile.</div> : null}
           </div>
         </nav>
         <Routes>
